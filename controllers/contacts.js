@@ -11,7 +11,24 @@ const {
 } = require("../schemas/contacts");
 
 const getAllContacts = async (req, res) => {
-  const contacts = await Contact.find();
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 20, favorite = null } = req.query;
+  const skip = (page - 1) * limit;
+
+  if (!(favorite === null)) {
+    const contacts = await Contact.find({ owner, favorite }, "", {
+      skip,
+      limit,
+    }).populate("owner", "email");
+
+    res.json(contacts);
+  }
+
+  const contacts = await Contact.find({ owner }, "", { skip, limit }).populate(
+    "owner",
+    "email"
+  );
+
   res.json(contacts);
 };
 
@@ -34,7 +51,9 @@ const addContact = async (req, res) => {
     throw httpError(400, error.message);
   }
 
-  const contact = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+
+  const contact = await Contact.create({ ...req.body, owner });
   res.status(201).json(contact);
 };
 
