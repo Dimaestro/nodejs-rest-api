@@ -1,7 +1,5 @@
 const { Schema, model } = require('mongoose');
-
 const { subscriptions, emailRegExp } = require('../constants/user-constants');
-
 const { handleValidationError } = require('./hooks');
 
 const userSchema = new Schema({
@@ -21,6 +19,9 @@ const userSchema = new Schema({
     enum: subscriptions,
     default: "starter"
   },
+  avatarURL: {
+    type: String,
+  },
   token: {
     type: String,
     default: null,
@@ -32,7 +33,6 @@ const userSchema = new Schema({
 )
 
 userSchema.post("save", handleValidationError);
-
 const User = model("user", userSchema);
 
 module.exports = User;
