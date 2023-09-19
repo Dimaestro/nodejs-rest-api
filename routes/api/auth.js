@@ -4,6 +4,8 @@ const { authenticate, upload } = require("../../middlewares");
 const ctrl = require("../../controllers/auth");
 
 router.post("/register", ctrl.signUp);
+router.get("/verify/:verificationToken", ctrl.verify);
+router.post("/verify", ctrl.resendVerifyEmail);
 router.post("/login", ctrl.signIn);
 router.post("/logout", authenticate, ctrl.signOut);
 router.get("/current", authenticate, ctrl.getCurrentUser);
