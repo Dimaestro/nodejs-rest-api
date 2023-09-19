@@ -1,9 +1,6 @@
 const Contact = require("../models/contact");
-
 const { httpError } = require("../helpers");
-
 const { ctrlWrapper } = require("../decorators");
-
 const {
   contactAddSchema,
   contactUpdateSchema,
@@ -20,7 +17,6 @@ const getAllContacts = async (req, res) => {
       skip,
       limit,
     }).populate("owner", "email");
-
     res.json(contacts);
   }
 
@@ -28,31 +24,25 @@ const getAllContacts = async (req, res) => {
     "owner",
     "email"
   );
-
   res.json(contacts);
 };
 
 const getContactById = async (req, res) => {
   const { contactId } = req.params;
-
   const contact = await Contact.findById(contactId);
-
   if (!contact) {
     throw httpError(404);
   }
-
   res.json(contact);
 };
 
 const addContact = async (req, res) => {
   const { error } = contactAddSchema.validate(req.body);
-
   if (error) {
     throw httpError(400, error.message);
   }
 
   const { _id: owner } = req.user;
-
   const contact = await Contact.create({ ...req.body, owner });
   res.status(201).json(contact);
 };
@@ -60,11 +50,9 @@ const addContact = async (req, res) => {
 const removeContact = async (req, res) => {
   const { contactId } = req.params;
   const contact = await Contact.findByIdAndDelete(contactId);
-
   if (!contact) {
     throw httpError(404);
   }
-
   res.json({ message: "contact deleted" });
 };
 
@@ -74,21 +62,17 @@ const updateContact = async (req, res) => {
   }
 
   const { error } = contactUpdateSchema.validate(req.body);
-
   if (error) {
     throw httpError(400, error.message);
   }
 
   const { contactId } = req.params;
-
   const result = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
   });
-
   if (!result) {
     throw httpError(404);
   }
-
   res.status(200).json(result);
 };
 
@@ -98,21 +82,17 @@ const updateStatusContact = async (req, res) => {
   }
 
   const { error } = contactUpdateStatusSchema.validate(req.body);
-
   if (error) {
     throw httpError(400, error.message);
   }
 
   const { contactId } = req.params;
-
   const contact = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
   });
-
   if (!contact) {
     throw httpError(404);
   }
-
   res.status(200).json(contact);
 };
 

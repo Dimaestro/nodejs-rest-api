@@ -1,5 +1,4 @@
 const Joi = require("joi");
-
 const { subscriptions, emailRegExp } = require("../constants/user-constants");
 
 const userSignUpSchema = Joi.object({
